@@ -62,3 +62,10 @@ int main(){
   printf("Sorted Array:\n");
   printArray(a,n);
 }
+output:-
+Enter the Size of the Array:7
+Enter the Elements:1 5 3 2 3 4 0
+Given Array:
+1 5 3 2 3 4 0 
+Sorted Array:
+0 1 2 3 3 4 5 

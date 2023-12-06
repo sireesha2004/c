@@ -1,0 +1,98 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct Edge{
+int source;
+int destination;
+int weight;
+};
+typedef struct Edge Edge;
+int n;
+int find(int i,int parent[]){
+  while(parent[i]!=-1){
+    i=parent[i];
+  }
+  return i;
+}
+void Union(int i,int j,int parent[]){
+  parent[j]=i;
+}
+int Krushkal(int cost[n][n],Edge edges[],int k){
+  int i=0,mincost=0;
+  int parent[n],t[n-1][2];
+  for(int j=0;j<n;j++){
+    parent[j]=-1;
+  }
+  int j=0;
+  while(i<n-1  &&  j<k){
+    int u=edges[j].source;
+    int v=edges[j].destination;
+    int p1=find(u,parent);
+    int p2=find(v,parent);
+    if(p1!=p2){
+      i=i+1;
+      mincost+=cost[u][v];
+      t[i][0]=u;t[i][1]=v;
+      Union(p1,p2,parent);
+    }
+   j=j+1;
+  }
+  return mincost;
+}
+int main(){
+  printf("Enter no of vertices \n");
+  scanf("%d",&n);
+  int cost[n][n];
+printf("Enter the Graph(Cost Adjacency Matrix):\n");
+  for(int i=0;i<n;i++){
+    printf("Enter distance between %d and others\n",i);
+    for(int j=0;j<n;j++){
+      scanf("%d",&cost[i][j]);
+    }
+  }
+  //int cost[7][7]={{0,28,999,999,999,10,999},{28,0,16,999,999,999,14},{999,16,0,12,999,999,999},{999,999,12,0,22,999,18},{999,999,999,22,0,25,24},{10,999,999,999,25,0,999},{999,14,999,18,24,999,0}};
+  // n=7;
+  Edge edges[10];
+int k=0;
+  //Creating edges Array from cost adjacency matrix
+  for(int i=0;i<n;i++){
+    for(int j=0;j<=i;j++){
+      if(cost[i][j]!=0 && cost[i][j]!=999){
+        edges[k].source=j;
+        edges[k].destination=i;
+        edges[k].weight=cost[i][j];
+        k++;
+      }
+    }
+  }
+  //Sorting The Edges based on Edge Weights
+  for(int i=0;i<k;i++){
+    for(int j=0;j<k-1;j++){
+      if(edges[j].weight>edges[j+1].weight){
+        Edge temp=edges[j];
+        edges[j]=edges[j+1];
+        edges[j+1]=temp;
+      }
+    }
+  }
+  int mincost=Krushkal(cost,edges,k);
+  printf("\nThe minimun cost of the Spanning Tree is %d",mincost);
+}
+
+output:-
+enter no of vertices :7
+Enter the Graph(Cost Adjacency Matrix):
+Enter distance between 0 and 
+0 28 999 999 999 10 999
+Enter distance between 1 and others
+28 0 16 999 999 999 14
+Enter distance between 2 and others
+999 16 0 12 999 999 999
+Enter distance between 3 and others
+999 999 12 0 22 999 18
+Enter distance between 4 and others
+999 999 999 22 0 25 24
+Enter distance between 5 and others
+10 999 999 999 25 0 999
+Enter distance between 6 and others
+999 14 999 18 24 999 0
+The minimun cost of the Spanning Tree is 99

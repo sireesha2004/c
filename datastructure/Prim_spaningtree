@@ -1,0 +1,106 @@
+#include<stdio.h>
+#include <stdlib.h>
+int n;
+int mincostIndex(int near[], int cost[n][n]) {
+  int mincost = 999;
+  int j;
+  for (int i = 0; i < n; i++) {
+    if (near[i] != -1) {
+      if (cost[i][near[i]] < mincost) {
+        mincost = cost[i][near[i]];
+        j = i;
+      }
+    }
+  }
+  return j;
+}
+int Prims(int c[n][n], int t[n - 1][2]) {
+  int k = 0, l = 1;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      if (i != j && c[k][l] > c[i][j]) {
+        k = i;
+        l = j;
+      }
+    }
+  }
+  // printf("%d\t,%d",k,l);
+  int mincost = c[k][l];
+  int near[n];
+  for (int i = 0; i < n; i++) {
+    if (c[i][k] < c[i][l]) {
+      near[i] = k;
+    } else {
+      near[i] = l;
+    }
+  }
+  near[k] = -1;
+  near[l] = -1;
+  t[0][0] = k;
+  t[0][1] = l;
+  for (int i = 1; i < n - 1; i++) {
+    int j = mincostIndex(near, c);
+    mincost += c[j][near[j]];
+    t[i][0] = j;
+    t[i][1] = near[j];
+    near[j] = -1;
+    for (int k = 0; k < n; k++) {
+      if (c[k][near[k]] > c[k][j] && near[k] != -1) {
+        near[k] = j;
+      }
+    } 
+  }
+  return mincost;
+}
+int main(void) {
+  printf("Enter no of vertices of graph\n");
+  scanf("%d", &n);
+  int cost[n][n];
+  printf("Enter the Graph(Cost Adjacency Matrix):\n");
+  //n=7;
+  // int cost[7][7] = {
+  //     {0, 28, 999, 999, 999, 10, 999}, {28, 0, 16, 999, 999, 999, 14},
+  //     {999, 16, 0, 12, 999, 999, 999}, {999, 999, 12, 0, 22, 999, 18},
+  //     {999, 999, 999, 22, 0, 25, 24},  {10, 999, 999, 999, 25, 0, 999},
+  //     {999, 14, 999, 18, 24, 999, 0}};
+  int t[n - 1][2];
+  for(int i=0;i<n;i++){
+    printf("Enter distance between %d and others\n",i);
+    for(int j=0;j<n;j++){
+      scanf("%d",&cost[i][j]);
+    }
+  }
+  int mincost = Prims(cost, t);
+  printf("The minimum cost of Spanning tree is:%d \n", mincost);
+  printf("The Result:\n");
+  for (int i = 0; i < n - 1; i++) {
+    printf("%d\t %d\n", t[i][0] + 1, t[i][1] + 1);
+  }
+}
+
+output:-
+Enter no of vertices of graph
+7
+Enter the Graph(Cost Adjacency Matrix):
+Enter distance between 0 and others
+0 28 999 999 999 10 999
+Enter distance between 1 and others
+28 0 16 999 999 999 14
+Enter distance between 2 and others
+999 16 0 12 999 999 999
+Enter distance between 3 and others
+999 999 12 0 22 999 18
+Enter distance between 4 and others
+999 999 999 22 0 25 24
+Enter distance between 5 and others
+10 999 999 999 25 0 999
+Enter distance between 6 and others
+999 14 999 18 24 999 0
+The minimum cost of Spanning tree is:99 
+The Result:
+1	 6
+5	 6
+4	 5
+3	 4
+2	 3
+7	 2

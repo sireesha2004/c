@@ -1,0 +1,82 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+void interchange(int a[], int i, int j) {
+    int t = a[i];
+    a[i] = a[j];
+    a[j] = t;
+}
+
+int partition(int a[], int l, int h) {
+    int pivot = a[l];
+    int i = l;
+    int j = h + 1;
+    while (i < j) {
+        while (a[i] <= pivot && i < j) {
+            i++;
+        }
+        while (a[j] > pivot) {
+            j--;
+        }
+        if (i < j) {
+            interchange(a, i, j);
+        }
+    }
+    interchange(a, l, j);
+    return j;
+}
+
+int ksmall(int a[], int l, int h, int k) {
+    if (l == h) {
+        return a[l];
+    }
+    while (1) {
+        int j = partition(a, l, h);
+        if (k == j) {
+            return a[j];
+        } else if (k < j) {
+            h = j - 1;
+        } else {
+            l = j + 1;
+        }
+        if (l == h) {
+            return a[l];
+        }
+    }
+}
+void readArray(int a[],int n){
+  for(int i=0;i<n;i++)
+    scanf("%d",&a[i]);
+}
+void printArray(int a[],int n){  
+  for(int i=0;i<n;i++)
+    printf("%d ",a[i]);
+printf("\n");
+}
+int main() {
+    //int a[] = {55, 1, 42, 6, 53, 5};
+    
+    int n;
+    printf("Enter the Size of the Array:");
+    scanf("%d",&n);
+    int a[n],k;
+    printf("Enter the Elements:");
+    readArray(a,n);
+    printf("Given Array:\n");
+    printArray(a,n);
+    
+    printf("Enter the k value to find the kth smallest element:\n");
+    scanf("%d", &k);
+    int pos = ksmall(a, 0, n-1, k - 1);
+    printf("The %dth smallest element is %d", k, pos);
+    return 0;
+}
+
+output:-
+Enter the Size of the Array:6
+Enter the Elements:55 1 42 6 53 7
+Given Array:
+55 1 42 6 53 7 
+Enter the k value to find the kth smallest element:
+3
+The 3th smallest element is 7

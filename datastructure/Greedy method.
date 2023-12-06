@@ -1,0 +1,88 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+//int n = 7;
+//float p[] = { 10.0, 5.0,15.0, 7.0,6.0, 18.0, 3.0};
+//float w[] = {2.0, 3.0, 5.0, 7.0 , 1.0,4.0,1.0 };
+//float x[7];
+
+void readArray(float a[],int n){
+    for(int i=0;i<n;i++)
+        scanf("%f",&a[i]);
+}
+void printArray(float a[],int n){
+    for(int i=0;i<n;i++)
+        printf("%f ",a[i]);
+    printf("\n");
+}
+void interchange(int a[], int i, int j) {
+    int t = a[i];
+    a[i] = a[j];
+    a[j] = t;
+}
+
+void knapsack(float p[],float w[],int m, int n,float x[]) {
+    for (int i = 0; i < n; i++) {
+        x[i] = 0.0;
+    }
+    if (m == 0) {
+        return;
+    }
+    int index[n];
+    for (int i = 0; i < n; i++) {
+        index[i] = i;
+    }
+    for (int i = 0; i < n - 1; i++) {
+          for (int j = i + 1; j < n; j++) {
+            if (p[index[i]] / w[index[i]] < p[index[j]] / w[index[j]]) {
+                interchange(index, i, j);
+            }
+        }
+    }
+    float u = m;int i;
+    for (i = 0; i < n; i++) {
+        if (w[index[i]] > u) {
+            break;
+        }
+        x[index[i]] = 1.0;
+        u -= w[index[i]];
+    }
+    if (i < n) {
+        x[index[i]] = u / w[index[i]];
+    }
+}
+
+int main() {
+    int n,m;
+    printf("Enter the no.of elements:");
+    scanf("%d",&n);
+    float p[n],w[n],x[n];
+    printf("\nEnter the Profit values:\n");
+    readArray(p,n);
+    printf("\nEnter the Weight values:\n");
+    readArray(w,n);
+    printf("\nEnter the Maximum Limit of Knapsack:");
+    scanf("%d",&m);
+    //int m = 15;
+    knapsack(p, w, m, n, x);
+    float opt_prof=0;
+    printf("\nSolution set is:\n");
+    for(int i=0;i<n;i++){
+        printf("%f ",x[i]);
+        opt_prof+=p[i]*x[i];
+    }
+    printf("\nThe Optimal Profit Of the Knapsack is:%f",opt_prof);
+    
+    return 0;
+}
+
+output:-
+Enter the no.of elements:7
+Enter the Profit values:
+10 5 15 7 6 18 3
+Enter the Weight values:
+2 3 5 7 1 4 1
+Enter the Maximum Limit of Knapsack:15
+Solution set is:
+1.000000 0.666667 1.000000 0.000000 1.000000 1.000000 1.000000 
+The Optimal Profit Of the Knapsack is:55.333336
